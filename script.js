@@ -84,7 +84,7 @@ function guardarReflexion(e) {
   const texto = document.getElementById("textoReflexion").value.trim();
   const fecha = new Date().toLocaleDateString("es-ES");
   const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
-  reflexiones.push({ titulo, texto, fecha });
+  reflexiones.push({ id: Date.now(), titulo, texto, fecha });
   localStorage.setItem("reflexionesCAS", JSON.stringify(reflexiones));
   e.target.reset();
   mostrarReflexiones();
@@ -98,7 +98,18 @@ function mostrarReflexiones() {
   reflexiones.slice().reverse().forEach(ref => {
     const div = document.createElement("div");
     div.className = "reflexion";
-    div.innerHTML = `<h3>${ref.titulo}</h3><small>${ref.fecha}</small><p>${ref.texto}</p>`;
+    div.innerHTML = `
+      <h3>${ref.titulo}</h3>
+      <small>${ref.fecha}</small>
+      <p>${ref.texto}</p>
+      <button onclick="eliminarReflexion(${ref.id})">🗑️ Eliminar</button>
+    `;
+function eliminarReflexion(id) {
+  const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
+  const nuevas = reflexiones.filter(r => r.id !== id);
+  localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
+  mostrarReflexiones();
+}
     cont.appendChild(div);
   });
 }
