@@ -21,11 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
 // === ACTIVIDADES ===
 function guardarActividad(e) {
   e.preventDefault();
-  const nombre = nombre.value.trim();
+  const nombre = document.getElementById("nombre").value.trim();
   const categoria = document.getElementById("categoria").value;
   const horas = parseInt(document.getElementById("horas").value);
   const fecha = document.getElementById("fecha").value;
-  const nombre = document.getElementById("nombre").value.trim();
+  const descripcion = document.getElementById("descripcion").value.trim();
 
   const actividades = JSON.parse(localStorage.getItem("actividadesCAS")) || [];
   actividades.push({ nombre, categoria, horas, fecha, descripcion });
