@@ -25,7 +25,7 @@ function guardarActividad(e) {
   const categoria = document.getElementById("categoria").value;
   const horas = parseInt(document.getElementById("horas").value);
   const fecha = document.getElementById("fecha").value;
-  const nombre = nombre.value.trim();
+  const nombre = document.getElementById("nombre").value.trim();
 
   const actividades = JSON.parse(localStorage.getItem("actividadesCAS")) || [];
   actividades.push({ nombre, categoria, horas, fecha, descripcion });
