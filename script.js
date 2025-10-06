@@ -109,7 +109,13 @@ function mostrarReflexiones() {
       <button onclick="eliminarReflexion(${ref.id})">🗑️ Eliminar</button>
     `;
 function eliminarReflexion(id) {
-  const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
+  let reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
+
+  reflexiones = reflexiones.map((r, i) => {
+    if (!r.id) r.id = i + 1;
+    return r;
+  });
+
   const nuevas = reflexiones.filter(r => r.id !== id);
   localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
   mostrarReflexiones();
