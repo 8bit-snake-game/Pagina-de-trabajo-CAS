@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAS Tracker - Reflexiones</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Reflexiones CAS</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="actividades.html">Actividades</a>
+      <a href="reflexiones.html">Reflexiones</a>
+      <a href="horario.html">Horario</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="formReflexion" class="formulario">
+      <input type="text" id="tituloReflexion" placeholder="Título de la reflexión" required>
+      <textarea id="textoReflexion" placeholder="Escribe tu reflexión aquí..." rows="5" required></textarea>
+      <button type="submit">Guardar Reflexión</button>
+    </form>
+
+    <section>
+      <h2>Mis Reflexiones</h2>
+      <div id="listaReflexiones" class="lista-reflexiones"></div>
+    </section>
+  </main>
+</body>
+</html>
