@@ -75,6 +75,10 @@ function actualizarTotales() {
   if (elA) elA.textContent = `${totalA} horas`;
   const elS = document.getElementById("totalS");
   if (elS) elS.textContent = `${totalS} horas`;
+
+  const totalGeneral = totalC + totalA + totalS;
+const elG = document.getElementById("totalGeneral");
+if (elG) elG.textContent = `${totalGeneral} horas`;
 }
 
 // === REFLEXIONES ===
@@ -153,4 +157,18 @@ function limpiarHorario() {
   localStorage.removeItem("horarioCAS");
   document.querySelectorAll("#tablaHorario tbody tr td:nth-child(2)").forEach(td => td.textContent = "");
   alert("Horario limpiado 🧹");
+}
+
+function exportarDatos() {
+  const data = {
+    actividades: JSON.parse(localStorage.getItem("actividadesCAS")) || [],
+    reflexiones: JSON.parse(localStorage.getItem("reflexionesCAS")) || [],
+    horario: JSON.parse(localStorage.getItem("horarioCAS")) || []
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "cas_backup.json";
+  a.click();
 }
