@@ -108,6 +108,10 @@ function mostrarReflexiones() {
       <p>${ref.texto}</p>
       <button onclick="eliminarReflexion(${ref.id})">🗑️ Eliminar</button>
     `;
+    cont.appendChild(div);
+  });
+}
+
 function eliminarReflexion(id) {
   let reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
 
@@ -119,9 +123,6 @@ function eliminarReflexion(id) {
   const nuevas = reflexiones.filter(r => r.id !== id);
   localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
   mostrarReflexiones();
-}
-    cont.appendChild(div);
-  });
 }
 
 function mostrarReflexionesPreview() {
