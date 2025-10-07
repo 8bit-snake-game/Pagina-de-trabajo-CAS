@@ -54,6 +54,9 @@ function mostrarActividades() {
 }
 
 function eliminarActividad(index) {
+  const confirmar = confirm("¿Estás seguro de que quieres eliminar esta actividad?");
+  if (!confirmar) return;
+
   const actividades = JSON.parse(localStorage.getItem("actividadesCAS")) || [];
   actividades.splice(index, 1);
   localStorage.setItem("actividadesCAS", JSON.stringify(actividades));
@@ -149,12 +152,20 @@ function mostrarReflexiones() {
 }
 
 function eliminarReflexion(id) {
+  const confirmar = confirm("¿Seguro que quieres eliminar esta reflexión?");
+  if (!confirmar) return;
+
   let reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
 
   reflexiones = reflexiones.map((r, i) => {
     if (!r.id) r.id = i + 1;
     return r;
   });
+
+  const nuevas = reflexiones.filter(r => r.id !== id);
+  localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
+  mostrarReflexiones();
+}
 
   const nuevas = reflexiones.filter(r => r.id !== id);
   localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
