@@ -106,7 +106,7 @@ function mostrarReflexiones() {
       <h3>${ref.titulo}</h3>
       <small>${ref.fecha}</small>
       <p>${ref.texto}</p>
-      <button onclick="eliminarReflexion(${ref.id})">🗑️ Eliminar</button>
+      <button onclick="eliminarReflexion('${ref.id}')">🗑️ Eliminar</button>
     `;
     cont.appendChild(div);
   });
