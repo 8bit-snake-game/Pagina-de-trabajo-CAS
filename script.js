@@ -97,17 +97,35 @@ function guardarReflexion(e) {
 function mostrarReflexiones() {
   const cont = document.getElementById("listaReflexiones");
   if (!cont) return;
+
   const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
   cont.innerHTML = "";
+
   reflexiones.slice().reverse().forEach(ref => {
     const div = document.createElement("div");
     div.className = "reflexion";
-    div.innerHTML = `
-      <h3>${ref.titulo}</h3>
-      <small>${ref.fecha}</small>
-      <p>${ref.texto}</p>
-      <button onclick="eliminarReflexion('${ref.id}')">🗑️ Eliminar</button>
-    `;
+
+    // contenido textual
+    const titulo = document.createElement("h3");
+    titulo.textContent = ref.titulo;
+
+    const fecha = document.createElement("small");
+    fecha.textContent = ref.fecha;
+
+    const texto = document.createElement("p");
+    texto.textContent = ref.texto;
+
+    // botón eliminar
+    const btn = document.createElement("button");
+    btn.textContent = "🗑️ Eliminar";
+    btn.addEventListener("click", () => eliminarReflexion(ref.id));
+
+    // ensamblar todo
+    div.appendChild(titulo);
+    div.appendChild(fecha);
+    div.appendChild(texto);
+    div.appendChild(btn);
+
     cont.appendChild(div);
   });
 }
