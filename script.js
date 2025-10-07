@@ -87,8 +87,20 @@ function guardarReflexion(e) {
   const titulo = document.getElementById("tituloReflexion").value.trim();
   const texto = document.getElementById("textoReflexion").value.trim();
   const fecha = new Date().toLocaleDateString("es-ES");
-  const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
-  reflexiones.push({ id: Date.now(), titulo, texto, fecha });
+
+  let reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
+
+  if (window.reflexionEditando) {
+    // Editar reflexión existente
+    reflexiones = reflexiones.map(r =>
+      r.id === window.reflexionEditando ? { ...r, titulo, texto } : r
+    );
+    window.reflexionEditando = null;
+  } else {
+    // Crear nueva reflexión
+    reflexiones.push({ id: Date.now(), titulo, texto, fecha });
+  }
+
   localStorage.setItem("reflexionesCAS", JSON.stringify(reflexiones));
   e.target.reset();
   mostrarReflexiones();
