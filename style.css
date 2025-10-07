@@ -199,3 +199,22 @@ footer.site-footer {
   nav a { display:inline-block; margin: 6px 8px; font-size: .9rem; }
   main { padding: .9rem; }
 }
+
+.reflexion button {
+  margin: 5px 5px 0 0;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.reflexion button:nth-child(4) { /* Editar */
+  background-color: #ffc107;
+  color: white;
+}
+
+.reflexion button:nth-child(5) { /* Eliminar */
+  background-color: #dc3545;
+  color: white;
+}
