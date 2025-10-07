@@ -167,11 +167,6 @@ function eliminarReflexion(id) {
   mostrarReflexiones();
 }
 
-  const nuevas = reflexiones.filter(r => r.id !== id);
-  localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
-  mostrarReflexiones();
-}
-
 function editarReflexion(id) {
   const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
   const reflexion = reflexiones.find(r => r.id === id);
