@@ -157,14 +157,17 @@ function eliminarReflexion(id) {
 
   let reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
 
-  reflexiones = reflexiones.map((r, i) => {
-    if (!r.id) r.id = i + 1;
-    return r;
-  });
+  // Aseguramos que todas las reflexiones tengan un id
+  reflexiones = reflexiones.map((r, i) => ({
+    ...r,
+    id: r.id || i + 1
+  }));
 
+  // Filtramos correctamente
   const nuevas = reflexiones.filter(r => r.id !== id);
   localStorage.setItem("reflexionesCAS", JSON.stringify(nuevas));
   mostrarReflexiones();
+  mostrarReflexionesPreview(); // 🔹 refresca también el preview
 }
 
 function editarReflexion(id) {
