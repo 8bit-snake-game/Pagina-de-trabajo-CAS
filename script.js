@@ -149,6 +149,18 @@ function eliminarReflexion(id) {
   mostrarReflexiones();
 }
 
+function editarReflexion(id) {
+  const reflexiones = JSON.parse(localStorage.getItem("reflexionesCAS")) || [];
+  const reflexion = reflexiones.find(r => r.id === id);
+  if (!reflexion) return;
+
+  document.getElementById("tituloReflexion").value = reflexion.titulo;
+  document.getElementById("textoReflexion").value = reflexion.texto;
+
+  // Guardamos el id temporalmente
+  window.reflexionEditando = id;
+}
+
 function mostrarReflexionesPreview() {
   const cont = document.getElementById("previewReflexiones");
   if (!cont) return;
