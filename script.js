@@ -116,15 +116,21 @@ function mostrarReflexiones() {
     texto.textContent = ref.texto;
 
     // botón eliminar
-    const btn = document.createElement("button");
-    btn.textContent = "🗑️ Eliminar";
-    btn.addEventListener("click", () => eliminarReflexion(ref.id));
-
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "🗑️ Eliminar";
+    btnEliminar.addEventListener("click", () => eliminarReflexion(ref.id));
+    
+    // botón editar
+    const btnEditar = document.createElement("button");
+    btnEditar.textContent = "✏️ Editar";
+    btnEditar.addEventListener("click", () => editarReflexion(ref.id));
+    
     // ensamblar todo
     div.appendChild(titulo);
     div.appendChild(fecha);
     div.appendChild(texto);
-    div.appendChild(btn);
+    div.appendChild(btnEditar);
+    div.appendChild(btnEliminar);
 
     cont.appendChild(div);
   });
