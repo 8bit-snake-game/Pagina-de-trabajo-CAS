@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   mostrarReflexiones();
   mostrarReflexionesPreview();
   cargarHorario();
+  iniciarContadorReflexion();
 
   const formAct = document.getElementById("formActividad");
   if (formAct) formAct.addEventListener("submit", guardarActividad);
@@ -177,6 +178,8 @@ function editarReflexion(id) {
 
   document.getElementById("tituloReflexion").value = reflexion.titulo;
   document.getElementById("textoReflexion").value = reflexion.texto;
+  // actualizar el contador porque el valor se cambió por código
+document.getElementById("textoReflexion").dispatchEvent(new Event('input', { bubbles: true }));
 
   // Guardamos el id temporalmente
   window.reflexionEditando = id;
@@ -223,32 +226,48 @@ function limpiarHorario() {
   alert("Horario limpiado 🧹");
 }
 
-// === CONTADOR DE PALABRAS PARA REFLEXIÓN ===
+// === CONTADOR DE PALABRAS (robusto) ===
 function contarPalabras(text) {
   if (!text) return 0;
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-function iniciarContadorReflexion() {
-  const textarea = document.getElementById("textoReflexion");
-  const counter = document.getElementById("wordCount");
+function actualizarContador(textarea) {
+  const counter = document.getElementById('wordCount');
   if (!textarea || !counter) return;
-
-  const MAX_WORDS = 400;
-  const WARN_AT = 350;
-
-  const actualizar = () => {
-    const n = contarPalabras(textarea.value);
-    counter.textContent = `${n} palabra${n === 1 ? "" : "s"}`;
-    counter.classList.toggle("warning", n >= WARN_AT && n <= MAX_WORDS);
-    counter.classList.toggle("exceeded", n > MAX_WORDS);
-  };
-
-  textarea.addEventListener("input", actualizar);
-  actualizar();
+  const n = contarPalabras(textarea.value);
+  const MAX = 400, WARN = 350;
+  counter.textContent = `${n} palabra${n === 1 ? '' : 's'}`;
+  counter.classList.toggle('warning', n >= WARN && n <= MAX);
+  counter.classList.toggle('exceeded', n > MAX);
 }
 
-document.addEventListener("DOMContentLoaded", iniciarContadorReflexion);
+function iniciarContadorReflexion() {
+  const counter = document.getElementById('wordCount');
+  if (!counter) return; // no hay contador en el HTML
+
+  // si el textarea ya existe, lo enlazamos; si no, observamos para enlazarlo cuando aparezca
+  let textarea = document.getElementById('textoReflexion');
+  if (textarea) {
+    textarea.addEventListener('input', () => actualizarContador(textarea));
+    actualizarContador(textarea);
+  } else {
+    const obs = new MutationObserver((mutaciones, observer) => {
+      textarea = document.getElementById('textoReflexion');
+      if (textarea) {
+        textarea.addEventListener('input', () => actualizarContador(textarea));
+        actualizarContador(textarea);
+        observer.disconnect();
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // fallback por delegación: si el nodo se reemplaza en caliente, seguimos contando
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.id === 'textoReflexion') actualizarContador(e.target);
+  });
+}
 
 function exportarDatos() {
   const data = {
