@@ -44,6 +44,19 @@ header h1 {
 nav {
   margin-top: 0.6rem;
 }
+
+header nav {
+  display: flex;
+  justify-content: center;  /* centra horizontalmente */
+  gap: 20px;                /* espacio entre cada pestaña */
+}
+
+header nav a {
+  text-decoration: none;
+  color: inherit;           /* conserva el color actual */
+  font-weight: 500;
+}
+
 nav a {
   color: rgba(255,255,255,0.95);
   text-decoration: none;
