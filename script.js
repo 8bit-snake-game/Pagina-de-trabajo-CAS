@@ -244,29 +244,28 @@ function actualizarContador(textarea) {
 
 function iniciarContadorReflexion() {
   const counter = document.getElementById('wordCount');
-  if (!counter) return; // no hay contador en el HTML
+  if (!counter) return;
 
-  // si el textarea ya existe, lo enlazamos; si no, observamos para enlazarlo cuando aparezca
-  let textarea = document.getElementById('textoReflexion');
-  if (textarea) {
-    textarea.addEventListener('input', () => actualizarContador(textarea));
-    actualizarContador(textarea);
-  } else {
-    const obs = new MutationObserver((mutaciones, observer) => {
-      textarea = document.getElementById('textoReflexion');
-      if (textarea) {
-        textarea.addEventListener('input', () => actualizarContador(textarea));
-        actualizarContador(textarea);
-        observer.disconnect();
-      }
+  function conectarTextarea() {
+    const textarea = document.getElementById('textoReflexion');
+    if (!textarea) return false;
+
+    const actualizar = () => actualizarContador(textarea);
+    // Escuchar varios eventos por compatibilidad móvil
+    ['input', 'keyup', 'change', 'paste'].forEach(evt => {
+      textarea.addEventListener(evt, actualizar);
+    });
+    actualizar(); // actualizar inmediatamente
+    return true;
+  }
+
+  if (!conectarTextarea()) {
+    // si el textarea no existe aún, observar hasta que aparezca
+    const obs = new MutationObserver(() => {
+      if (conectarTextarea()) obs.disconnect();
     });
     obs.observe(document.body, { childList: true, subtree: true });
   }
-
-  // fallback por delegación: si el nodo se reemplaza en caliente, seguimos contando
-  document.addEventListener('input', (e) => {
-    if (e.target && e.target.id === 'textoReflexion') actualizarContador(e.target);
-  });
 }
 
 function exportarDatos() {
