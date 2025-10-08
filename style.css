@@ -191,14 +191,6 @@ footer.site-footer {
   margin-top: 2rem;
 }
 
-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centra el contenido del header */
-  text-align: center;
-}
-
-
 /* Responsive */
 @media (max-width:900px){
   .cards { grid-template-columns: repeat(2, 1fr); }
