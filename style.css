@@ -248,7 +248,9 @@ footer.site-footer {
 }
 
 @media (min-width: 901px) {
-  nav {
-    text-align: center; /* o right, si los quieres a la derecha */
+  header nav {
+    display: flex;           /* aseguramos que siga siendo flex */
+    justify-content: center; /* centra horizontalmente los enlaces */
+    gap: 20px;               /* espacio entre cada pestaña */
   }
 }
