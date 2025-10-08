@@ -6,6 +6,8 @@
   <title>CAS Tracker - Reflexiones</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@7.2.0/build/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 </head>
 <body>
   <header>
@@ -26,6 +28,7 @@
         <div id="wordCount" class="word-counter">0 palabras</div>
       </div>
       <button type="submit" class="btn">Guardar Reflexión</button>
+      <button id="exportWord" class="btn">💾 Exportar Reflexiones a Word</button>
     </form>
 
     <section>
