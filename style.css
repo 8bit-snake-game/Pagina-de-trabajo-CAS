@@ -218,3 +218,29 @@ footer.site-footer {
   background-color: #dc3545;
   color: white;
 }
+
+.textarea-container {
+  position: relative;
+  width: 100%;
+}
+
+.word-counter {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  pointer-events: none;
+  background: rgba(255,255,255,0.7);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.word-counter.warning {
+  color: #e69500;
+}
+
+.word-counter.exceeded {
+  color: #cc2222;
+  font-weight: 600;
+}
