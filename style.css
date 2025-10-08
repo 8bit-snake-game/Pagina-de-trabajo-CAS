@@ -212,7 +212,7 @@ footer.site-footer {
 }
 
 .reflexion button:nth-child(4) { /* Editar */
-  background-color: #ffc107;
+  background-color: #ffc107 !important;
   color: white;
 }
 
