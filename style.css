@@ -45,17 +45,6 @@ nav {
   margin-top: 0.6rem;
 }
 
-header nav {
-  display: flex;
-  justify-content: center;  /* centra horizontalmente */
-  gap: 20px;                /* espacio entre cada pestaña */
-}
-
-header nav a {
-  text-decoration: none;
-  color: inherit;           /* conserva el color actual */
-  font-weight: 500;
-}
 
 nav a {
   color: rgba(255,255,255,0.95);
@@ -201,6 +190,14 @@ footer.site-footer {
   font-size: .95rem;
   margin-top: 2rem;
 }
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra el contenido del header */
+  text-align: center;
+}
+
 
 /* Responsive */
 @media (max-width:900px){
