@@ -221,6 +221,26 @@ footer.site-footer {
   color: white;
 }
 
+.reflexion button {
+  margin-right: 6px;
+  margin-top: 6px;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.reflexion button:nth-child(4) {
+  background-color: #0077b6;
+  color: white;
+}
+
+.reflexion button:nth-child(4):hover {
+  background-color: #0096c7;
+}
+
+
 .textarea-container {
   position: relative;
   width: 100%;
