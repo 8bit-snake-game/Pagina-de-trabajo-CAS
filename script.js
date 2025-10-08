@@ -281,3 +281,53 @@ function exportarDatos() {
   a.download = "cas_backup.json";
   a.click();
 }
+
+document.getElementById("exportWord").addEventListener("click", async () => {
+  // Importamos lo necesario desde la librería docx
+  const { Document, Packer, Paragraph, TextRun } = window.docx;
+
+  // Obtenemos todas las reflexiones
+  const reflexiones = document.querySelectorAll(".reflexion");
+  if (reflexiones.length === 0) {
+    alert("No hay reflexiones para exportar.");
+    return;
+  }
+
+  // Creamos un nuevo documento
+  const doc = new Document();
+
+  // Agregamos cada reflexión al documento
+  reflexiones.forEach((r, index) => {
+    const titulo = r.querySelector("h3")?.innerText || `Reflexión ${index + 1}`;
+    const texto = r.querySelector("p")?.innerText || "";
+
+    // Título en negrita y tamaño mayor
+    doc.addSection({
+      children: [
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: titulo,
+              bold: true,
+              size: 28, // tamaño del texto en puntos (1/2 pt)
+            }),
+          ],
+          spacing: { after: 200 }, // espacio después del párrafo
+        }),
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: texto,
+              size: 24, // tamaño normal
+            }),
+          ],
+          spacing: { after: 300 }, // espacio después del párrafo
+        }),
+      ],
+    });
+  });
+
+  // Generamos el archivo y lo descargamos
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, "Reflexiones.docx");
+});
