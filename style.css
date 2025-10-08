@@ -212,7 +212,7 @@ footer.site-footer {
 }
 
 .reflexion button:nth-child(4) { /* Editar */
-  background-color: #ffc107 !important;
+  background-color: #ffc107;
   color: white;
 }
 
@@ -231,12 +231,12 @@ footer.site-footer {
   font-weight: 600;
 }
 
-.reflexion button:nth-child(4) {
+.reflexion button:nth-child(6) {
   background-color: #0077b6;
   color: white;
 }
 
-.reflexion button:nth-child(4):hover {
+.reflexion button:nth-child(6):hover {
   background-color: #0096c7;
 }
 
