@@ -249,8 +249,8 @@ footer.site-footer {
 
 @media (min-width: 901px) {
   header nav {
-    display: flex;           /* aseguramos que siga siendo flex */
-    justify-content: center; /* centra horizontalmente los enlaces */
-    gap: 20px;               /* espacio entre cada pestaña */
+    display: flex !important;
+    justify-content: center !important;
+    gap: 20px;
   }
 }
