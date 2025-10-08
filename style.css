@@ -258,9 +258,3 @@ footer.site-footer {
   font-weight: 600;
 }
 
-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centra el contenido del header */
-  text-align: center;
-}
