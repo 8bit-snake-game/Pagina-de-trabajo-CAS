@@ -223,6 +223,33 @@ function limpiarHorario() {
   alert("Horario limpiado 🧹");
 }
 
+// === CONTADOR DE PALABRAS PARA REFLEXIÓN ===
+function contarPalabras(text) {
+  if (!text) return 0;
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function iniciarContadorReflexion() {
+  const textarea = document.getElementById("textoReflexion");
+  const counter = document.getElementById("wordCount");
+  if (!textarea || !counter) return;
+
+  const MAX_WORDS = 400;
+  const WARN_AT = 350;
+
+  const actualizar = () => {
+    const n = contarPalabras(textarea.value);
+    counter.textContent = `${n} palabra${n === 1 ? "" : "s"}`;
+    counter.classList.toggle("warning", n >= WARN_AT && n <= MAX_WORDS);
+    counter.classList.toggle("exceeded", n > MAX_WORDS);
+  };
+
+  textarea.addEventListener("input", actualizar);
+  actualizar();
+}
+
+document.addEventListener("DOMContentLoaded", iniciarContadorReflexion);
+
 function exportarDatos() {
   const data = {
     actividades: JSON.parse(localStorage.getItem("actividadesCAS")) || [],
