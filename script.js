@@ -140,13 +140,19 @@ function mostrarReflexiones() {
     const btnEditar = document.createElement("button");
     btnEditar.textContent = "✏️ Editar";
     btnEditar.addEventListener("click", () => editarReflexion(ref.id));
-    
+
+    // botón exportar
+    const btnExportar = document.createElement("button");
+    btnExportar.textContent = "📄 Exportar a Word";
+    btnExportar.addEventListener("click", () => exportarReflexionWord(ref));
+        
     // ensamblar todo
     div.appendChild(titulo);
     div.appendChild(fecha);
     div.appendChild(texto);
     div.appendChild(btnEditar);
     div.appendChild(btnEliminar);
+    div.appendChild(btnExportar);
 
     cont.appendChild(div);
   });
@@ -282,6 +288,40 @@ function exportarDatos() {
   a.click();
 }
 
+////
+function exportarReflexionWord(ref) {
+  const { titulo, texto, fecha } = ref;
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel } = window.docx;
+
+  const doc = new Document({
+    sections: [{
+      properties: {},
+      children: [
+        new Paragraph({
+          text: titulo,
+          heading: HeadingLevel.HEADING_1,
+          spacing: { after: 200 },
+        }),
+        new Paragraph({
+          text: `Fecha: ${fecha}`,
+          spacing: { after: 200 },
+          style: "SubtleEmphasis",
+        }),
+        new Paragraph({
+          children: [new TextRun({ text: texto, size: 24 })],
+          spacing: { line: 360 },
+        }),
+      ],
+    }],
+  });
+
+  Packer.toBlob(doc).then(blob => {
+    saveAs(blob, `${titulo}.docx`);
+  });
+}
+
+////
+
 document.getElementById("exportWord").addEventListener("click", async () => {
   // Importamos lo necesario desde la librería docx
   const { Document, Packer, Paragraph, TextRun } = window.docx;
@@ -331,3 +371,4 @@ document.getElementById("exportWord").addEventListener("click", async () => {
   const blob = await Packer.toBlob(doc);
   saveAs(blob, "Reflexiones.docx");
 });
+
