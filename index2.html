@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login falso (demo)</title>
+  <style>
+    body { font-family: system-ui, Arial; display:flex; min-height:100vh; align-items:center; justify-content:center; background:#f5f7fb; }
+    .card { background:white; padding:24px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.08); width:340px; }
+    input { width:100%; padding:8px 10px; margin:8px 0; box-sizing:border-box; border-radius:6px; border:1px solid #d7dbe4; }
+    button { width:100%; padding:10px; border-radius:8px; border:0; background:#2563eb; color:white; font-weight:600; cursor:pointer; }
+    .error { color:#b91c1c; margin-top:8px; }
+    .small { font-size:13px; color:#525964; margin-top:8px; }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+  <div class="card" id="authCard">
+    <h3>Iniciar sesión (demo)</h3>
+
+    <div id="loginForm">
+      <label>Usuario</label>
+      <input id="username" autocomplete="username" />
+      <label>Contraseña</label>
+      <input id="password" type="password" autocomplete="current-password" />
+      <button id="btnLogin">Entrar</button>
+      <div class="error" id="err"></div>
+      <div class="small">Cuentas preconfiguradas: no se pueden crear otras.</div>
+    </div>
+
+    <div id="panelUser" class="hidden">
+      <p>Has iniciado sesión como: <strong id="userLabel"></strong></p>
+      <button id="btnLogout">Cerrar sesión</button>
+      <div class="small" style="margin-top:12px;">
+        Si necesitas restablecer cuentas, limpia el localStorage en DevTools.
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // --- CONFIGURACIÓN: define las cuentas que quieres permitir (usuario -> contraseña en texto plano) ---
+  // Nota: las contraseñas serán guardadas como hash SHA-256 para que no estén en texto plano en localStorage,
+  // pero esto NO las hace seguras contra un atacante con acceso al navegador.
+  const PRECONFIG_ACCOUNTS = [
+    { username: "admin", password: "admin123" },
+    { username: "user1", password: "contraseña1" },
+    { username: "invitado", password: "demo" }
+  ];
+  const ACCOUNTS_KEY = "fake_server_accounts_v1"; // clave en localStorage que contiene cuentas hasheadas
+  const SESSION_KEY = "fake_session_v1"; // clave para sesión (usuario logueado)
+
+  // --- helpers de hashing (SHA-256) ---
+  async function sha256Hex(str) {
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  // --- inicializar cuentas en localStorage si no existen ---
+  async function initAccounts() {
+    const existing = localStorage.getItem(ACCOUNTS_KEY);
+    if (existing) return; // ya inicializado
+
+    const map = {};
+    for (const acc of PRECONFIG_ACCOUNTS) {
+      // Puedes concatenar username + ':' + password como "salting" simple antes del hash
+      const hash = await sha256Hex(acc.username + ":" + acc.password);
+      map[acc.username] = { pwdHash: hash };
+    }
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(map));
+    console.log("Cuentas preconfiguradas inicializadas (demo).");
+  }
+
+  // --- funciones de autenticación ---
+  async function checkCredentials(username, password) {
+    const storedRaw = localStorage.getItem(ACCOUNTS_KEY);
+    if (!storedRaw) return false;
+
+    const accounts = JSON.parse(storedRaw);
+    if (!accounts[username]) return false;
+
+    const hash = await sha256Hex(username + ":" + password);
+    return hash === accounts[username].pwdHash;
+  }
+
+  function setSession(username) {
+    // Guarda el usuario logueado; aquí solo se guarda nombre (no token real)
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ username, when: Date.now() }));
+  }
+
+  function clearSession() {
+    localStorage.removeItem(SESSION_KEY);
+  }
+
+  function getSession() {
+    const s = localStorage.getItem(SESSION_KEY);
+    return s ? JSON.parse(s) : null;
+  }
+
+  // --- UI & flujo ---
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const btnLogin = document.getElementById("btnLogin");
+  const errDiv = document.getElementById("err");
+  const panelUser = document.getElementById("panelUser");
+  const loginForm = document.getElementById("loginForm");
+  const userLabel = document.getElementById("userLabel");
+  const btnLogout = document.getElementById("btnLogout");
+
+  async function tryLogin() {
+    errDiv.textContent = "";
+    const u = usernameInput.value.trim();
+    const p = passwordInput.value;
+    if (!u || !p) { errDiv.textContent = "Completa usuario y contraseña."; return; }
+    const ok = await checkCredentials(u, p);
+    if (!ok) { errDiv.textContent = "Usuario o contraseña incorrectos."; return; }
+    setSession(u);
+    renderUI();
+  }
+
+  function renderUI() {
+    const session = getSession();
+    if (session && session.username) {
+      loginForm.classList.add("hidden");
+      panelUser.classList.remove("hidden");
+      userLabel.textContent = session.username;
+    } else {
+      loginForm.classList.remove("hidden");
+      panelUser.classList.add("hidden");
+      userLabel.textContent = "";
+    }
+  }
+
+  btnLogin.addEventListener("click", tryLogin);
+  passwordInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+
+  btnLogout.addEventListener("click", () => {
+    clearSession();
+    renderUI();
+  });
+
+  // --- evitar "registro" o creación de nuevas cuentas ---
+  // No hay interfaz ni endpoint de registro. Si quisieras bloquear modificaciones manuales:
+  // podrías validar en cada carga que las cuentas coinciden con la lista preconfigurada y restaurarlas.
+  // A continuación restauramos cuentas a PRECONFIG_ACCOUNTS si alguien borró ACCOUNTS_KEY (opcional).
+  async function protectAccounts() {
+    // Si quieres forzar que siempre sólo existan las cuentas preconfiguradas,
+    // descomenta la siguiente línea para re-escribir accounts en cada carga:
+    // localStorage.removeItem(ACCOUNTS_KEY);
+    // Pero con esto cualquier cambio manual se revertirá en cada carga de la página.
+  }
+
+  // --- inicio ---
+  (async function main(){
+    await initAccounts();
+    await protectAccounts();
+    renderUI();
+  })();
+
+  </script>
+</body>
+</html>
